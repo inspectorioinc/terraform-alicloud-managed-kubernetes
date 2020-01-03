@@ -21,7 +21,8 @@ resource "alicloud_cs_managed_kubernetes" "this" {
   vswitch_ids           = local.vswitch_ids
   new_nat_gateway       = var.new_vpc == true ? false : var.new_nat_gateway
   worker_disk_category  = var.worker_disk_category
-  password              = var.ecs_password
+  password              = var.ecs_keyname != "" ? null : local.password
+  key_name              = var.ecs_keyname
   pod_cidr              = var.k8s_pod_cidr
   service_cidr          = var.k8s_service_cidr
   slb_internet_enabled  = true
@@ -39,4 +40,8 @@ resource "alicloud_cs_managed_kubernetes" "this" {
   cluster_ca_cert = var.cluster_ca_cert_path
 
   depends_on = [alicloud_snat_entry.new]
+
+  lifecycle {
+    ignore_changes = [password]
+  }
 }

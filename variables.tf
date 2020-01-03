@@ -85,9 +85,14 @@ variable "worker_disk_size" {
   default     = 40
 }
 
+variable "ecs_keyname" {
+  description = "The keypair of ssh login cluster node."
+  default     = ""
+}
+
 variable "ecs_password" {
   description = "The password of worker nodes."
-  default     = "Abc12345"
+  default     = ""
 }
 
 variable "worker_number" {

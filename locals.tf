@@ -9,6 +9,13 @@ locals {
   vswitch_ids    = length(var.vswitch_ids) > 0 ? var.vswitch_ids : alicloud_vswitch.new.*.id
   sls_project    = var.sls_project_name == "" ? concat(alicloud_log_project.new.*.id, [""])[0] : var.sls_project_name
   instance_types = length(var.worker_instance_types) > 0 ? var.worker_instance_types : [data.alicloud_instance_types.default.ids.0]
+  password       = var.ecs_password == "" ? var.ecs_password : sha256(bcrypt(random_password.password.result))
 }
 
 resource "random_uuid" "this" {}
+
+resource "random_password" "password" {
+  length           = 25
+  special          = true
+  override_special = "_%@"
+}
